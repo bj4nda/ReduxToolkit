@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 import ApplicationContext from '../context';
+import { removeTask } from '../features/tasks-slice';
+import { useAppDispatch } from '../hooks';
 
 type TaskProps = {
   task: Task;
@@ -10,12 +12,19 @@ const Task = ({ task }: TaskProps) => {
 
   const status = columns.find((column) => column.id === task.column)?.title;
   const user = users.find((user) => user.id === task.user);
-
+  const dispatch = useAppDispatch();
   return (
     <article className="task">
       <header className="task-header">
         <h2 className="task-title">{task.title}</h2>
-        <button className="destructive small">Remove</button>
+        <button
+          className="destructive small"
+          onClick={() => {
+            dispatch(removeTask(task.id));
+          }}
+        >
+          Remove
+        </button>
       </header>
       <div className="task-details">
         <p className="task-status">{status}</p>
