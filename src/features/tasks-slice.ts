@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit';
+import data from '../api/data.json';
+import { removeUser } from './user-slice';
 
 type TaskState = {
   entities: Task[];
 };
 
 const initialState: TaskState = {
-  entities: [],
+  entities: data.tasks,
 };
 
 type DraftTask = Pick<Task, 'title'>;
@@ -31,6 +33,16 @@ const taskSlice = createSlice({
       );
       state.entities.splice(index, 1);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(removeUser, (state, action) => {
+      const userId = action.payload;
+      for (const task of state.entities) {
+        if (task.user === userId) {
+          task.user = undefined;
+        }
+      }
+    });
   },
 });
 export const taskReducer = taskSlice.reducer;
